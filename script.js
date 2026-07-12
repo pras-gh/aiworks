@@ -1,7 +1,7 @@
 const menuButton = document.querySelector('.menu-button');
 const navigation = document.querySelector('.desktop-nav');
 
-if (menuButton) {
+if (menuButton && navigation) {
   menuButton.addEventListener('click', () => {
     const expanded = menuButton.getAttribute('aria-expanded') === 'true';
     menuButton.setAttribute('aria-expanded', String(!expanded));
@@ -27,4 +27,3 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 
 revealItems.forEach((item) => revealObserver.observe(item));
-document.getElementById('year').textContent = new Date().getFullYear();
