@@ -121,3 +121,49 @@ if (approachSection) {
     approachSection.style.setProperty('--pointer-y', '50%');
   });
 }
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!reducedMotion) {
+  document.querySelectorAll('[data-magnetic]').forEach((element) => {
+    let magneticFrame;
+
+    element.addEventListener('pointermove', (event) => {
+      const bounds = element.getBoundingClientRect();
+      const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 7;
+      const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 7;
+
+      cancelAnimationFrame(magneticFrame);
+      magneticFrame = requestAnimationFrame(() => {
+        element.style.setProperty('--mag-x', `${x}px`);
+        element.style.setProperty('--mag-y', `${y}px`);
+      });
+    });
+
+    element.addEventListener('pointerleave', () => {
+      element.style.setProperty('--mag-x', '0px');
+      element.style.setProperty('--mag-y', '0px');
+    });
+  });
+
+  document.querySelectorAll('[data-tilt]').forEach((card) => {
+    let tiltFrame;
+
+    card.addEventListener('pointermove', (event) => {
+      const bounds = card.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+      cancelAnimationFrame(tiltFrame);
+      tiltFrame = requestAnimationFrame(() => {
+        card.style.setProperty('--tilt-x', `${-y * 2.2}deg`);
+        card.style.setProperty('--tilt-y', `${x * 2.2}deg`);
+      });
+    });
+
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+    });
+  });
+}
