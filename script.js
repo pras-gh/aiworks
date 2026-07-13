@@ -49,23 +49,23 @@ if (approachSection) {
   const approachContent = {
     1: {
       title: 'Discover & Define',
-      description: 'Map the workflows, systems, and data that hold the highest potential for AI leverage.',
+      description: 'Identify high impact AI opportunities.',
     },
     2: {
       title: 'Design & Build',
-      description: 'Connect the right data, models, and automation into a dependable working system.',
+      description: 'Custom AI solutions built for production.',
     },
     3: {
       title: 'Validate & Optimize',
-      description: 'Measure quality, speed, and reliability before improving the system with confidence.',
+      description: 'Measure performance before scaling.',
     },
     4: {
       title: 'Collaborate & Iterate',
-      description: 'Keep product, engineering, and operations aligned around the outcome that matters.',
+      description: 'Built together, refined continuously.',
     },
     5: {
       title: 'Launch & Scale',
-      description: 'Deploy, monitor, and evolve AI systems that are ready for the real world.',
+      description: 'Deploy with confidence.',
     },
   };
 
