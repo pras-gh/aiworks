@@ -16,6 +16,16 @@ if (menuButton && navigation) {
   });
 }
 
+const siteHeader = document.querySelector('.site-header');
+const updateHeaderState = () => {
+  if (siteHeader) {
+    siteHeader.classList.toggle('is-scrolled', window.scrollY > 12);
+  }
+};
+
+updateHeaderState();
+window.addEventListener('scroll', updateHeaderState, { passive: true });
+
 const revealItems = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -28,144 +38,50 @@ const revealObserver = new IntersectionObserver((entries) => {
 
 revealItems.forEach((item) => revealObserver.observe(item));
 
-const siteHeader = document.querySelector('.site-header');
-const updateHeaderState = () => {
-  if (siteHeader) {
-    siteHeader.classList.toggle('is-scrolled', window.scrollY > 12);
-  }
-};
+const interventions = document.querySelector('[data-interventions]');
 
-updateHeaderState();
-window.addEventListener('scroll', updateHeaderState, { passive: true });
-
-const workIndex = document.querySelector('[data-work-index]');
-
-if (workIndex) {
-  const signalButtons = [...workIndex.querySelectorAll('[data-signal]')];
-  const signalTitle = workIndex.querySelector('[data-signal-title]');
-  const signalDescription = workIndex.querySelector('[data-signal-description]');
-  const signalEffect = workIndex.querySelector('[data-signal-effect]');
-  const signalContent = {
-    workflow: {
-      title: 'Automate the handoffs',
-      description: 'Connect the repetitive steps between teams so work moves without waiting on a queue.',
-      effect: 'Faster operations',
+if (interventions) {
+  const controls = [...interventions.querySelectorAll('[data-intervention]')];
+  const exhibitNumber = interventions.querySelector('[data-exhibit-number]');
+  const exhibitTitle = interventions.querySelector('[data-exhibit-title]');
+  const exhibitDescription = interventions.querySelector('[data-intervention-description]');
+  const interventionContent = {
+    automation: {
+      number: '01 / 03',
+      title: 'Workflow Automation',
+      description: 'Replace repetitive handoffs with AI systems that keep work moving across the tools your team already uses.',
+    },
+    roadmap: {
+      number: '02 / 03',
+      title: 'AI Roadmap',
+      description: 'Find the few AI opportunities worth pursuing, then build a clear route from investment to measurable impact.',
     },
     product: {
-      title: 'Make the product useful',
-      description: 'Turn fragmented context into AI features that help customers complete work in the moment.',
-      effect: 'A sharper product edge',
-    },
-    strategy: {
-      title: 'Find the right first move',
-      description: 'Rank the opportunities worth building around the data, systems, and outcomes that matter most.',
-      effect: 'A clear route to value',
+      number: '03 / 03',
+      title: 'AI Product Development',
+      description: 'Turn a useful AI capability into a product experience customers understand, trust, and return to.',
     },
   };
 
-  const activateSignal = (signal) => {
-    const content = signalContent[signal];
+  const activateIntervention = (intervention) => {
+    const content = interventionContent[intervention];
     if (!content) return;
 
-    workIndex.dataset.active = signal;
-    signalTitle.textContent = content.title;
-    signalDescription.textContent = content.description;
-    signalEffect.textContent = content.effect;
+    interventions.dataset.active = intervention;
+    exhibitNumber.textContent = content.number;
+    exhibitTitle.textContent = content.title;
+    exhibitDescription.textContent = content.description;
 
-    signalButtons.forEach((button) => {
-      const isActive = button.dataset.signal === signal;
-      button.classList.toggle('is-active', isActive);
-      button.setAttribute('aria-pressed', String(isActive));
+    controls.forEach((control) => {
+      const isActive = control.dataset.intervention === intervention;
+      control.classList.toggle('is-active', isActive);
+      control.setAttribute('aria-pressed', String(isActive));
     });
   };
 
-  signalButtons.forEach((button) => {
-    button.addEventListener('click', () => activateSignal(button.dataset.signal));
-    button.addEventListener('focus', () => activateSignal(button.dataset.signal));
-  });
-}
-
-const approachSection = document.querySelector('[data-approach]');
-
-if (approachSection) {
-  const approachCards = [...approachSection.querySelectorAll('[data-approach-step]')];
-  const visualIndex = approachSection.querySelector('[data-visual-index]');
-  const visualTitle = approachSection.querySelector('[data-visual-title]');
-  const visualDescription = approachSection.querySelector('[data-visual-description]');
-  const approachVisual = approachSection.querySelector('.approach-visual');
-  const approachContent = {
-    1: {
-      title: 'Discover & Define',
-      description: 'Identify high impact AI opportunities.',
-    },
-    2: {
-      title: 'Design & Build',
-      description: 'Custom AI solutions built for production.',
-    },
-    3: {
-      title: 'Validate & Optimize',
-      description: 'Measure performance before scaling.',
-    },
-    4: {
-      title: 'Collaborate & Iterate',
-      description: 'Built together, refined continuously.',
-    },
-    5: {
-      title: 'Launch & Scale',
-      description: 'Deploy with confidence.',
-    },
-  };
-
-  const activateApproachStep = (step) => {
-    const content = approachContent[step];
-    if (!content) return;
-
-    approachSection.dataset.active = String(step);
-    approachSection.style.setProperty('--progress', `${((step - 1) / 4) * 100}%`);
-
-    approachCards.forEach((card) => {
-      const cardStep = Number(card.dataset.approachStep);
-      card.classList.toggle('is-active', cardStep === step);
-      card.classList.toggle('is-complete', cardStep < step);
-      card.setAttribute('aria-pressed', String(cardStep === step));
-    });
-
-    visualIndex.textContent = `0${step} / 05`;
-    visualTitle.textContent = content.title;
-    visualDescription.textContent = content.description;
-  };
-
-  approachCards.forEach((card) => {
-    card.addEventListener('click', () => activateApproachStep(Number(card.dataset.approachStep)));
-    card.addEventListener('focus', () => activateApproachStep(Number(card.dataset.approachStep)));
-  });
-
-  const approachObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        activateApproachStep(Number(entry.target.dataset.approachStep));
-      }
-    });
-  }, { rootMargin: '-34% 0px -42% 0px', threshold: 0 });
-
-  approachCards.forEach((card) => approachObserver.observe(card));
-
-  let pointerFrame;
-  approachVisual.addEventListener('pointermove', (event) => {
-    const bounds = approachVisual.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / bounds.width) * 100;
-    const y = ((event.clientY - bounds.top) / bounds.height) * 100;
-
-    cancelAnimationFrame(pointerFrame);
-    pointerFrame = requestAnimationFrame(() => {
-      approachSection.style.setProperty('--pointer-x', `${x}%`);
-      approachSection.style.setProperty('--pointer-y', `${y}%`);
-    });
-  });
-
-  approachVisual.addEventListener('pointerleave', () => {
-    approachSection.style.setProperty('--pointer-x', '50%');
-    approachSection.style.setProperty('--pointer-y', '50%');
+  controls.forEach((control) => {
+    control.addEventListener('click', () => activateIntervention(control.dataset.intervention));
+    control.addEventListener('focus', () => activateIntervention(control.dataset.intervention));
   });
 }
 
@@ -190,27 +106,6 @@ if (!reducedMotion) {
     element.addEventListener('pointerleave', () => {
       element.style.setProperty('--mag-x', '0px');
       element.style.setProperty('--mag-y', '0px');
-    });
-  });
-
-  document.querySelectorAll('[data-tilt]').forEach((card) => {
-    let tiltFrame;
-
-    card.addEventListener('pointermove', (event) => {
-      const bounds = card.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-
-      cancelAnimationFrame(tiltFrame);
-      tiltFrame = requestAnimationFrame(() => {
-        card.style.setProperty('--tilt-x', `${-y * 2.2}deg`);
-        card.style.setProperty('--tilt-y', `${x * 2.2}deg`);
-      });
-    });
-
-    card.addEventListener('pointerleave', () => {
-      card.style.setProperty('--tilt-x', '0deg');
-      card.style.setProperty('--tilt-y', '0deg');
     });
   });
 }
