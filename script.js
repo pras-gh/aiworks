@@ -38,6 +38,53 @@ const updateHeaderState = () => {
 updateHeaderState();
 window.addEventListener('scroll', updateHeaderState, { passive: true });
 
+const workIndex = document.querySelector('[data-work-index]');
+
+if (workIndex) {
+  const signalButtons = [...workIndex.querySelectorAll('[data-signal]')];
+  const signalTitle = workIndex.querySelector('[data-signal-title]');
+  const signalDescription = workIndex.querySelector('[data-signal-description]');
+  const signalEffect = workIndex.querySelector('[data-signal-effect]');
+  const signalContent = {
+    workflow: {
+      title: 'Automate the handoffs',
+      description: 'Connect the repetitive steps between teams so work moves without waiting on a queue.',
+      effect: 'Faster operations',
+    },
+    product: {
+      title: 'Make the product useful',
+      description: 'Turn fragmented context into AI features that help customers complete work in the moment.',
+      effect: 'A sharper product edge',
+    },
+    strategy: {
+      title: 'Find the right first move',
+      description: 'Rank the opportunities worth building around the data, systems, and outcomes that matter most.',
+      effect: 'A clear route to value',
+    },
+  };
+
+  const activateSignal = (signal) => {
+    const content = signalContent[signal];
+    if (!content) return;
+
+    workIndex.dataset.active = signal;
+    signalTitle.textContent = content.title;
+    signalDescription.textContent = content.description;
+    signalEffect.textContent = content.effect;
+
+    signalButtons.forEach((button) => {
+      const isActive = button.dataset.signal === signal;
+      button.classList.toggle('is-active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+    });
+  };
+
+  signalButtons.forEach((button) => {
+    button.addEventListener('click', () => activateSignal(button.dataset.signal));
+    button.addEventListener('focus', () => activateSignal(button.dataset.signal));
+  });
+}
+
 const approachSection = document.querySelector('[data-approach]');
 
 if (approachSection) {
